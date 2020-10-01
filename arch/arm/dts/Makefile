@@ -100,7 +100,8 @@ dtb-$(CONFIG_ROCKCHIP_RK3288) += \
 	rk3288-veyron-mickey.dtb \
 	rk3288-veyron-minnie.dtb \
 	rk3288-veyron-speedy.dtb \
-	rk3288-vyasa.dtb
+	rk3288-vyasa.dtb \
+	rk3288-mtdp-615a.dtb
 
 dtb-$(CONFIG_ROCKCHIP_RK3308) += \
 	rk3308-evb.dtb \
