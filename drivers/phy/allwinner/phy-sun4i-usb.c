@@ -82,6 +82,7 @@ enum sun4i_usb_phy_type {
 	sun8i_v3s_phy,
 	sun50i_a64_phy,
 	sun50i_h6_phy,
+	suniv_phy,
 };
 
 struct sun4i_usb_phy_cfg {
@@ -356,7 +357,7 @@ static int sun4i_usb_phy_xlate(struct phy *phy,
 {
 	struct sun4i_usb_phy_data *data = dev_get_priv(phy->dev);
 
-	if (args->args_count >= data->cfg->num_phys)
+	if (args->args_count > data->cfg->num_phys)
 		return -EINVAL;
 
 	if (data->cfg->missing_phys & BIT(args->args[0]))
@@ -620,6 +621,14 @@ static const struct sun4i_usb_phy_cfg sun50i_h6_cfg = {
 	.missing_phys = BIT(1) | BIT(2),
 };
 
+static const struct sun4i_usb_phy_cfg suniv_cfg = {
+	.num_phys = 1,
+	.type = suniv_phy,
+	.disc_thresh = 3,
+	.phyctl_offset = REG_PHYCTL_A10,
+	.dedicated_clocks = true,
+};
+
 static const struct udevice_id sun4i_usb_phy_ids[] = {
 	{ .compatible = "allwinner,sun4i-a10-usb-phy", .data = (ulong)&sun4i_a10_cfg },
 	{ .compatible = "allwinner,sun5i-a13-usb-phy", .data = (ulong)&sun5i_a13_cfg },
@@ -633,6 +642,7 @@ static const struct udevice_id sun4i_usb_phy_ids[] = {
 	{ .compatible = "allwinner,sun8i-v3s-usb-phy", .data = (ulong)&sun8i_v3s_cfg },
 	{ .compatible = "allwinner,sun50i-a64-usb-phy", .data = (ulong)&sun50i_a64_cfg},
 	{ .compatible = "allwinner,sun50i-h6-usb-phy", .data = (ulong)&sun50i_h6_cfg},
+	{ .compatible = "allwinner,suniv-usb-phy", .data = (ulong)&suniv_cfg },
 	{ }
 };
 

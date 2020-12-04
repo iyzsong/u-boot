@@ -1093,6 +1093,15 @@ config SYS_SPI_U_BOOT_OFFS
 	 Address within SPI-Flash from where the u-boot payload is fetched
 	 from.
 
+config SYS_SPI_NAND_U_BOOT_OFFS
+	hex "address of u-boot payload in SPI NAND flash"
+	default 0xd000 if ARCH_SUNXI
+	default 0x0
+	depends on SPL_SPI_LOAD || SPL_SPI_SUNXI
+	help
+	 Address within SPI-NAND Flash from where the u-boot payload is fetched
+	 from.
+
 config SPL_THERMAL
 	bool "Driver support for thermal devices"
 	help

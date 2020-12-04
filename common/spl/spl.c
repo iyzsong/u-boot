@@ -553,8 +553,25 @@ static int boot_from_devices(struct spl_image_info *spl_image,
 
 		loader = spl_ll_find_loader(spl_boot_list[i]);
 #if defined(CONFIG_SPL_SERIAL_SUPPORT) && defined(CONFIG_SPL_LIBCOMMON_SUPPORT)
-		if (loader)
+		if (loader) {
 			printf("Trying to boot from %s\n", loader->name);
+#ifdef CONFIG_MACH_SUNIV
+			switch (spl_boot_list[i]) {
+				case BOOT_DEVICE_MMC1:
+					writeb(0, CONFIG_SUNXI_SRAM_ADDRESS + 0x6fff);
+					break;
+				case BOOT_DEVICE_MMC2:
+					writeb(2, CONFIG_SUNXI_SRAM_ADDRESS + 0x6fff);
+					break;
+				case BOOT_DEVICE_SPI:
+					writeb(3, CONFIG_SUNXI_SRAM_ADDRESS + 0x6fff);
+					break;
+				default:
+					writeb(-1, CONFIG_SUNXI_SRAM_ADDRESS + 0x6fff);
+					break;
+			}
+#endif
+		}
 		else
 			puts(SPL_TPL_PROMPT "Unsupported Boot Device!\n");
 #endif

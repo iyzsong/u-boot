@@ -16,6 +16,7 @@
 #include <errno.h>
 #include <mmc.h>
 #include <image.h>
+#include <asm/arch/spl.h>
 
 static int mmc_load_legacy(struct spl_image_info *spl_image, struct mmc *mmc,
 			   ulong sector, struct image_header *header)
@@ -69,6 +70,14 @@ int mmc_load_image_raw_sector(struct spl_image_info *spl_image,
 	struct image_header *header;
 	struct blk_desc *bd = mmc_get_blk_desc(mmc);
 	int ret = 0;
+
+#ifdef CONFIG_MACH_SUNIV
+	unsigned char *buffer = (unsigned char *)(CONFIG_SYS_TEXT_BASE);
+	count = blk_dread(bd, 16, 1, buffer);
+	if (!is_boot0_magic(buffer + 4)) {
+		return -1;
+	}
+#endif
 
 	header = spl_get_load_buffer(-sizeof(*header), bd->blksz);
 
